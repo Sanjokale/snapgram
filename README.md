@@ -89,9 +89,6 @@ We welcome contributions to Snapgram! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👏 Acknowledgements
 
@@ -115,7 +112,7 @@ This guide will walk you through setting up both the backend and frontend of the
 1. Navigate to the backend directory:
 
    ```bash
-   cd backend
+   cd server
    ```
 
 2. Install dependencies:
@@ -156,7 +153,7 @@ This guide will walk you through setting up both the backend and frontend of the
 1. Navigate to the frontend directory:
 
    ```bash
-   cd ../frontend
+   cd ../client
    ```
 
 2. Install dependencies:
