@@ -1,55 +1,68 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useFormik } from "formik"
-import { z } from "zod"
-import { toFormikValidationSchema } from "zod-formik-adapter"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useFormik } from "formik";
+import { z } from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
+import Link from "next/link";
+import axios from "axios";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-})
+});
 
 export default function Component() {
   const formik = useFormik({
     initialValues: {
-      name: "",
+      fullName: "",
       email: "",
       password: "",
     },
     validationSchema: toFormikValidationSchema(signUpSchema),
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values) => {
+      console.log(values);
+      try {
+        axios.post("http://localhost:8000/register", values);
+        alert("register successfully");
+      } catch (error) {
+        console.log(error);
+      }
     },
-  })
+  });
 
   return (
-    <div className="h-[80%] bg-black text-white flex items-center justify-center p-4">
+    <div className="h-[80%] bg-black text-white flex items-center justify-center p-4 rounded-lg">
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Create a new account</h1>
-          <p className="text-sm text-gray-400">To use snapgram, Please enter your details.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Create a new account
+          </h1>
+          <p className="text-sm text-gray-400">
+            To use snapgram, Please enter your details.
+          </p>
         </div>
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="sr-only">
-              Name
+            <Label htmlFor="fullName" className="sr-only">
+              fullName
             </Label>
             <Input
-              id="name"
-              placeholder="Name"
+              id="fullName"
+              placeholder="fullName"
               type="text"
-              {...formik.getFieldProps("name")}
+              {...formik.getFieldProps("fullName")}
               className={`bg-transparent border-gray-800 ${
-                formik.touched.name && formik.errors.name ? "border-red-500" : ""
+                formik.touched.fullName && formik.errors.fullName
+                  ? "border-red-500"
+                  : ""
               }`}
             />
-            {formik.touched.name && formik.errors.name && (
-              <p className="text-xs text-red-500">{formik.errors.name}</p>
+            {formik.touched.fullName && formik.errors.fullName && (
+              <p className="text-xs text-red-500">{formik.errors.fullName}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -62,7 +75,9 @@ export default function Component() {
               type="email"
               {...formik.getFieldProps("email")}
               className={`bg-transparent border-gray-800 ${
-                formik.touched.email && formik.errors.email ? "border-red-500" : ""
+                formik.touched.email && formik.errors.email
+                  ? "border-red-500"
+                  : ""
               }`}
             />
             {formik.touched.email && formik.errors.email && (
@@ -79,7 +94,9 @@ export default function Component() {
               type="password"
               {...formik.getFieldProps("password")}
               className={`bg-transparent border-gray-800 ${
-                formik.touched.password && formik.errors.password ? "border-red-500" : ""
+                formik.touched.password && formik.errors.password
+                  ? "border-red-500"
+                  : ""
               }`}
             />
             {formik.touched.password && formik.errors.password && (
@@ -127,5 +144,5 @@ export default function Component() {
         </div>
       </div>
     </div>
-  )
+  );
 }

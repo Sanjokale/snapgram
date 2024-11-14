@@ -1,7 +1,7 @@
 export default function AuthLayout({ children }) {
   return (
     <>
-      <section className="flex justify-center items-center flex-col py-10">
+      <section className="flex h-screen justify-center items-center flex-col py-10 ">
         {children}
 
         {/* <img
