@@ -10,12 +10,12 @@ import Link from "next/link";
 import axios from "axios";
 
 const signUpSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function Component() {
+export default function SignUpForm() {
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -52,7 +52,7 @@ export default function Component() {
             </Label>
             <Input
               id="fullName"
-              placeholder="fullName"
+              placeholder="Full Name"
               type="text"
               {...formik.getFieldProps("fullName")}
               className={`bg-transparent border-gray-800 ${
