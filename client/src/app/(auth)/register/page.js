@@ -8,6 +8,7 @@ import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import Link from "next/link";
 import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 const signUpSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -16,6 +17,7 @@ const signUpSchema = z.object({
 });
 
 export default function SignUpForm() {
+  const { toast } = useToast();
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -26,10 +28,17 @@ export default function SignUpForm() {
     onSubmit: async (values) => {
       console.log(values);
       try {
-        axios.post("http://localhost:8000/register", values);
-        alert("register successfully");
+        const {data} = await axios.post("http://localhost:8000/register", values);
+        if (data) {
+          toast({ title: data.msg });
+        }
+        
       } catch (error) {
-        console.log(error);
+        //debugger;
+        toast({
+          variant: "destructive",
+          title: error?.response?.data?.msg
+        })
       }
     },
   });
