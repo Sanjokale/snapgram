@@ -8,7 +8,7 @@ const register = async (req, res) => {
   const emailExist = await User.exists({ email: req.body.email });
   if (emailExist) return res.status(409).send({ msg: "Email already exist!" });
   req.body.password = await bcrypt.hash(req.body.password, saltRounds);
-
+  await User.create(req.body)
   res.status(200).send({ msg: "Account created successfully" });
 };
 
