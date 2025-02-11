@@ -4,7 +4,7 @@
   "description": "This is the social media app having features like facebook and instagram",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon src/index.js"
+    "dev": "nodemon src/index.js"
   },
   "author": "Sanjok Alemagar",
   "license": "ISC",
