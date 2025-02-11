@@ -8,8 +8,8 @@ const register = async (req, res) => {
   const emailExist = await User.exists({ email: req.body.email });
   if (emailExist) return res.status(409).send({ msg: "Email already exist!" });
   req.body.password = await bcrypt.hash(req.body.password, saltRounds);
-  User.create(req.body);
-  res.send({ msg: "Account created successfully" });
+
+  res.status(200).send({ msg: "Account created successfully" });
 };
 
 const login = async (req, res) => {
