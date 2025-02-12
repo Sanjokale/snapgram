@@ -20,7 +20,7 @@ const login = async (req, res) => {
   if (!isPasswordMatched)
     return res.status(401).send({ msg: "Invalid Password!!" });
   const token = jwt.sign({ email }, process.env.SECRET_KEY);
-  res.send({ token, user, isLoggednIn: true, msg: "Authorized!!" });
+  res.send({ token, user, isLoggedIn: true, msg: "Authorized!!" });
 };
 
 module.exports = { register, login };
