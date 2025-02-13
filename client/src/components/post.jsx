@@ -27,7 +27,7 @@ export function Post({ post}) {
         <p>{post.content}</p>
         {post.image && (
           <img
-            src={`${process.env.NEXT_PUBLIC_API_URL}/static/${post.image}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/static/posts/${post.image}`}
             alt="Post attachment"
             className="rounded-lg w-full object-cover max-h-[512px]"
           />

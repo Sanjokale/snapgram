@@ -6,7 +6,7 @@ import { PenSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { PostFeed } from "@/components/post-feed";
-import { currentUser } from "@/lib/data";
+
 import { useSelector } from "react-redux";
 
 export default function HomePage() {
@@ -33,7 +33,7 @@ export default function HomePage() {
         <div className="flex items-center gap-4">
           <Avatar className="h-10 w-10">
             <AvatarImage
-              src={currentUser.imageUrl}
+              src={null}
               alt={userDetails?.user?.username}
             />
             <AvatarFallback>{userDetails?.user?.username}</AvatarFallback>
