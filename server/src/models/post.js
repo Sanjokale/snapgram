@@ -1,7 +1,7 @@
 const  mongoose= require("mongoose");
 
 postSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   content: { type: String, required: true },
   image: { type: String },
   created_at: { type: Date, default: Date.now },
@@ -12,3 +12,4 @@ postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
+ 
