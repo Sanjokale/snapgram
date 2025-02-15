@@ -1,13 +1,29 @@
 "use client"
 
 
+import { useEffect, useState } from "react";
 import { Post } from "./post"
 
  // Import currentUser
 import { useSelector } from "react-redux";
+import axios from "axios";
 
-export function PostFeed( {posts}) {
-  const {currentUser: userDetails} = useSelector((state) => state.user);
+export function PostFeed() {
+  const { userDetails} = useSelector((state) => state.user);
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/posts");
+        setPosts(response.data.posts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   // const handleLike = (postId) => {
   //   setPosts(
@@ -27,7 +43,7 @@ export function PostFeed( {posts}) {
   return (
     <div className="space-y-6">
       {posts.map((post) => (
-        <Post key={post._id} post={post} />
+        <Post key={post._id} post={post} userDetails= {userDetails} />
       ))}
     </div>
   )

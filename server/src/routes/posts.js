@@ -10,6 +10,6 @@ const postRoute = Router();
 postRoute.post("/post", postUpload.single("image"), createPost);
 postRoute.get("/posts", getAllPost);
 postRoute.post("/post/:postId/comment", createCommentOnPost )
-postRoute.get("/post/:postId/comment", getCommentsOnPost )
+postRoute.get("/post/:postId/comments", getCommentsOnPost )
 
 module.exports = postRoute;

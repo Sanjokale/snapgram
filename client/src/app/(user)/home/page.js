@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
 import Link from "next/link";
 import { PenSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,19 +10,7 @@ import { useSelector } from "react-redux";
 
 export default function HomePage() {
   const { userDetails } = useSelector((state) => state.user);
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/posts");
-        setPosts(response.data.posts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-    fetchPosts();
-  }, []);
+ 
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -52,7 +39,7 @@ export default function HomePage() {
       </div>
 
       {/* Posts Feed */}
-      <PostFeed posts={posts} />
+      <PostFeed  />
     </div>
   );
 }

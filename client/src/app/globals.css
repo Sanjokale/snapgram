@@ -86,3 +86,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+}
