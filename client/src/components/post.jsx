@@ -9,16 +9,12 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import axios from "axios";
-import { toast, useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
+
 
 export function Post({ post, userDetails }) {
   const { toast } = useToast();
@@ -27,12 +23,17 @@ export function Post({ post, userDetails }) {
   const [postComments, setPostComments] = useState([]);
   const [updatedPost, setUpdatedPost] = useState({});
 
+
   
   const isLiked = updatedPost?.likes?.includes(userDetails?.user?._id); // include is the string method that sees the string is included or not. it returnd the boolean value base upon the included or not.
   
   
 
-  const handleSubmitComment = async (commentedPost) => {
+  const handleSubmitComment = async (commentedPost,e) => {
+ 
+   e.preventDefault()
+   
+    
     try {
       console.log("Comment value:", inputRef.current.value);
 
@@ -71,6 +72,9 @@ export function Post({ post, userDetails }) {
         `http://localhost:8080/post/${postId}/comments`
       );
       setPostComments(data);
+      console.log(postComments);
+      
+      
     } catch (error) {
       console.log("Error fetching comments:", error);
     }
@@ -86,7 +90,7 @@ export function Post({ post, userDetails }) {
       const { data } = await axios.get("http://localhost:8080/posts");
 
       const currentPost = data?.posts?.find((p) => p._id == post._id); //this find method  returns a items that match the id we given;
-      console.log(currentPost);
+      //console.log(currentPost);
 
       setUpdatedPost(currentPost);
     }
@@ -96,7 +100,7 @@ export function Post({ post, userDetails }) {
     if (postId) {
       fetchComments();
     }
-  }, [postId]);
+  }, [postId, postComments]);
 
   return (
     <>
@@ -104,7 +108,7 @@ export function Post({ post, userDetails }) {
       <Card className=" border-none shadow-lg">
         <CardHeader className="flex flex-row items-center gap-2">
           <Avatar>
-            <AvatarImage src={null} alt={post?.user?.username} />
+            <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${post?.user?.avatar}`} alt={post?.user?.username} />
             <AvatarFallback>{post?.user?.username[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -145,11 +149,11 @@ export function Post({ post, userDetails }) {
         {postId && postId == post._id && (
           <div className="w-full space-y-4 p-2 m-2 bg-blue-100 max-w-[65%]  rounded-lg border-none">
             <form
-              onSubmit={() => handleSubmitComment(postId)}
+              onSubmit={(e) => handleSubmitComment(postId, e)}
               className="flex w-full gap-2"
             >
               <Avatar className="h-8 w-8">
-                <AvatarImage src={null} alt={userDetails.user.username} />
+                <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`} alt={userDetails.user.username} />
                 <AvatarFallback>{userDetails.user.username}</AvatarFallback>
               </Avatar>
               <div className="flex-1 flex gap-2">
@@ -172,7 +176,7 @@ export function Post({ post, userDetails }) {
             {postComments.map((comment) => (
               <div key={comment._id} className="flex items-start gap-2">
                 <Avatar className="h-6 w-6">
-                  <AvatarImage src={null} alt={comment.commentedBy.username} />
+                  <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${comment?.commentedBy?.avatar}`} alt={comment.commentedBy.username} />
                   <AvatarFallback>
                     {comment.commentedBy.username[0]}
                   </AvatarFallback>

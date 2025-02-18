@@ -19,6 +19,15 @@ const getAllPost = async (req, res) => {
 
 }
 
+const getPost = async (req, res) => {
+  const data = await Post.find({user: req.params.id})
+  if(!data) {
+    res.send({msg: "you do not have any post"})
+  } else {
+    res.json(data)
+  }
+}
+
 const Comment = require("../models/comment");
 
 const createCommentOnPost = async (req, res) => {
@@ -29,8 +38,8 @@ const createCommentOnPost = async (req, res) => {
 };
 
 const getCommentsOnPost = async (req, res) => {
-  const postId = req.params.postId
-  const data = await Comment.find({post: postId}).populate("commentedBy", "username") //this line of code only populate the field username of that partucular commnetedBy Field
+  const postId = req.params.postId;
+  const data = await Comment.find({ post: postId }).populate("commentedBy", "username avatar");
   res.json(data)
 }
 
@@ -72,4 +81,4 @@ const postLikeToggled = async (req,res) => {
 }
   
  
-module.exports = { createPost, getAllPost, createCommentOnPost, getCommentsOnPost, postLikeToggled};
+module.exports = { createPost, getAllPost, createCommentOnPost, getCommentsOnPost, postLikeToggled, getPost};

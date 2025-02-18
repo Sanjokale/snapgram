@@ -4,23 +4,25 @@ import Link from "next/link";
 import { PenSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { PostFeed } from "@/components/post-feed";
+
 
 import { useSelector } from "react-redux";
+import PostFeed from "./post-feed";
+
+
+
 
 export default function HomePage() {
   const { userDetails } = useSelector((state) => state.user);
- 
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      
       {/* What's on your mind section */}
       <div className="rounded-lg border bg-card p-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-10 w-10">
             <AvatarImage
-              src={null}
+              src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`}
               alt={userDetails?.user?.username}
             />
             <AvatarFallback>{userDetails?.user?.username}</AvatarFallback>
@@ -39,7 +41,7 @@ export default function HomePage() {
       </div>
 
       {/* Posts Feed */}
-      <PostFeed  />
+      <PostFeed userDetails={userDetails} />
     </div>
   );
 }

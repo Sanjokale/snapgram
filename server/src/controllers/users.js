@@ -23,4 +23,15 @@ const login = async (req, res) => {
   res.send({ token, user, isLoggedIn: true, msg: "Authorized!!" });
 };
 
-module.exports = { register, login };
+const uploadAvatar = async (req, res) => {
+  const user = await User.findById(req.params.id)
+  if(!user) return res.status(404).send("User Id is invalid")
+    user.avatar = req.file.filename
+  user.save()
+  res.send({
+    msg: "Avatar uploaded successfully",
+    user
+  })
+}
+
+module.exports = { register, login, uploadAvatar };

@@ -31,6 +31,6 @@ const avatarUpload = configureMulter("uploads/avatars");
 
 // Export the route and multer configurations
 module.exports = {
-  postUpload,
+  postUpload,  
   avatarUpload,
 };

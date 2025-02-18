@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 // Validation Schema using Yup
 const validationSchema = Yup.object({
@@ -32,7 +33,7 @@ const validationSchema = Yup.object({
 
   bio: Yup.string().max(500, "Bio must not exceed 500 characters"),
   location: Yup.string(),
-  website: Yup.string().url("Invalid URL"),
+  website: Yup.string(),
 });
 
 const RegisterForm = () => {
@@ -46,11 +47,12 @@ const RegisterForm = () => {
     website: "",
   };
 
+  const router = useRouter()
   const { toast } = useToast();
 
   const handleSubmit = async (values, { setSubmitting }) => {
     // Handle form submission here
-    console.log(values);
+  
     try {
         const { data } = await axios.post(
           process.env.NEXT_PUBLIC_API_URL + "/register",
@@ -69,6 +71,8 @@ const RegisterForm = () => {
       }
 
     setSubmitting(false);
+    router.push("/login")
+    
   };
 
   return (

@@ -7,11 +7,12 @@ userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   bio: { type: String },
-  location: { type: String },
+  address: { type: String },
   website: { type: String },
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   saved_posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+  avatar: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);
