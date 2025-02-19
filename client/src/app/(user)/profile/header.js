@@ -6,7 +6,7 @@ const Header = ({handleImageUpload, isUploading, userDetails}) => {
 
   
   return (
-    <div className="relative h-48 bg-blue-200 rounded-md">
+    <div className="relative h-48 bg-blue-200 rounded-t-md">
       <div className="absolute -bottom-12 left-8 flex items-end space-x-4">
         <div className="relative">
           <label

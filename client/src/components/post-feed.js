@@ -5,13 +5,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Post } from '@/components/post';
 
-const PostFeed = ({ userDetails }) => {
+const PostFeed = ({userId} ) => {
+  console.log(userId);
+  
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/posts');
-      setPosts(data.posts); // Adjust based on your API response structure
+      const url = userId ? `http://localhost:8080/posts/${userId}` : "http://localhost:8080/posts"
+      const { data } = await axios.get(url);
+      setPosts(data); // Adjust based on your API response structure
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -23,8 +26,8 @@ const PostFeed = ({ userDetails }) => {
 
   return (
     <div className="space-y-6">
-      {posts.map((post) => (
-        <Post key={post._id} post={post} userDetails={userDetails} />
+      {posts?.map((post) => (
+        <Post key={post._id} post={post}  />
       ))}
     </div>
   );

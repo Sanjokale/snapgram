@@ -14,13 +14,13 @@ const createPost = async (req, res) => {
 
 
 const getAllPost = async (req, res) => {
-  const posts = await Post.find().populate('user')
-  res.json({posts})
+  const data = await Post.find().populate('user')
+  res.json(data)
 
 }
 
 const getPost = async (req, res) => {
-  const data = await Post.find({user: req.params.id})
+  const data = await Post.find({user: req.params.id}).populate("user")
   if(!data) {
     res.send({msg: "you do not have any post"})
   } else {
@@ -51,12 +51,12 @@ const postLikeToggled = async (req,res) => {
     return res.status(404),json({msg: "post not found"})
   }
   const isLiked = post.likes?.includes(userId)
-  console.log(isLiked);
+  
   
   if(isLiked) {
     post.likes = post.likes.filter( id => id.toString() !== userId.toString())
     await post.save();
-    res.json({msg: "Post unliked successfully!!"})
+    res.json({msg: "Post unliked successfully!!", isLiked})
   } else {
     post.likes.push(userId)
     post.save()
@@ -74,11 +74,23 @@ const postLikeToggled = async (req,res) => {
 //     // Like: Add user ID to likes array
 //     await Post.findByIdAndUpdate(postId, {
 //         $push: { likes: userId }
-//     });
-//     res.json({ message: 'Post liked successfully' });
-// }
+//     }); 
+}
 
+const PostLikesCount =  async(req, res) => {
+  const {postId, userId} = req.params
+  console.log(userId);
+  
+  const post = await Post.findById(postId)
+  if(post) {
+    const likesCount = post.likes.length;
+    const isLiked = post.likes.includes(userId)
+    console.log(isLiked);
+    
+    return res.json({isLiked, likesCount})
+  }
+  return res.status(404).json({msg: "post not found "})
 }
   
  
-module.exports = { createPost, getAllPost, createCommentOnPost, getCommentsOnPost, postLikeToggled, getPost};
+module.exports = { createPost, getAllPost, PostLikesCount, createCommentOnPost, getCommentsOnPost, postLikeToggled, getPost}

@@ -14,26 +14,26 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { useSelector } from "react-redux";
 
-
-export function Post({ post, userDetails }) {
+export function Post({ post }) {
   const { toast } = useToast();
   const [postId, setPostId] = useState("");
   const inputRef = useRef(null);
   const [postComments, setPostComments] = useState([]);
   const [updatedPost, setUpdatedPost] = useState({});
+  const { userDetails } = useSelector((state) => state.user);
+  const [isLiked, setIsLiked] = useState(null)
+  const [likesCount, setLikesCount] = useState(0)
 
-
-  
-  const isLiked = updatedPost?.likes?.includes(userDetails?.user?._id); // include is the string method that sees the string is included or not. it returnd the boolean value base upon the included or not.
-  
+  console.log(userDetails);
   
 
-  const handleSubmitComment = async (commentedPost,e) => {
- 
-   e.preventDefault()
-   
-    
+  // include is the string method that sees the string is included or not. it returnd the boolean value base upon the included or not.
+
+  const handleSubmitComment = async (commentedPost, e) => {
+    e.preventDefault();
+
     try {
       console.log("Comment value:", inputRef.current.value);
 
@@ -66,6 +66,8 @@ export function Post({ post, userDetails }) {
     inputRef.current.value = ""; // Clear input after submission
   };
 
+
+
   const fetchComments = async () => {
     try {
       const { data } = await axios.get(
@@ -73,42 +75,65 @@ export function Post({ post, userDetails }) {
       );
       setPostComments(data);
       console.log(postComments);
-      
-      
     } catch (error) {
       console.log("Error fetching comments:", error);
     }
   };
 
   const onLike = async () => {
-    const res = await axios.put("http://localhost:8080/post/like", {
+    const{data} = await axios.put("http://localhost:8080/post/like", {
       postId: post._id,
       userId: userDetails.user._id,
     });
 
-    if (res) {
-      const { data } = await axios.get("http://localhost:8080/posts");
+    if (data) {
+      setIsLiked(!isLiked)
+      
 
-      const currentPost = data?.posts?.find((p) => p._id == post._id); //this find method  returns a items that match the id we given;
-      //console.log(currentPost);
+  }
+}
 
-      setUpdatedPost(currentPost);
+  const fetchLikesData = async () => {
+    try {
+      const {data} = await axios.get(`http://localhost:8080/post/${post._id}/likes/${userDetails.user._id}`);
+      console.log(data);
+      
+      setLikesCount(data.likesCount); // Assuming your API returns likesCount
+      setIsLiked(data.isLiked); // Assuming your API returns isLiked
+    } catch (error) {
+      console.error("Error fetching likes data:", error);
     }
   };
 
   useEffect(() => {
+    fetchLikesData()
+  
+  }, [ likesCount, isLiked,])
+
+
+  
+  
+
+  
+
+  
+
+  useEffect(() => {
     if (postId) {
       fetchComments();
+     
     }
   }, [postId, postComments]);
 
   return (
     <>
-      
       <Card className=" border-none shadow-lg">
         <CardHeader className="flex flex-row items-center gap-2">
           <Avatar>
-            <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${post?.user?.avatar}`} alt={post?.user?.username} />
+            <AvatarImage
+              src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${post?.user?.avatar}`}
+              alt={post?.user?.username}
+            />
             <AvatarFallback>{post?.user?.username[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -132,7 +157,7 @@ export function Post({ post, userDetails }) {
               <Heart
                 className={`mr-2 h-4 w-4 ${isLiked ? "fill-current" : ""}`}
               />
-              {updatedPost?.likes?.length}
+              {likesCount}
             </Button>
             <Button
               variant="ghost"
@@ -153,7 +178,10 @@ export function Post({ post, userDetails }) {
               className="flex w-full gap-2"
             >
               <Avatar className="h-8 w-8">
-                <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`} alt={userDetails.user.username} />
+                <AvatarImage
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`}
+                  alt={userDetails.user.username}
+                />
                 <AvatarFallback>{userDetails.user.username}</AvatarFallback>
               </Avatar>
               <div className="flex-1 flex gap-2">
@@ -176,7 +204,10 @@ export function Post({ post, userDetails }) {
             {postComments.map((comment) => (
               <div key={comment._id} className="flex items-start gap-2">
                 <Avatar className="h-6 w-6">
-                  <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${comment?.commentedBy?.avatar}`} alt={comment.commentedBy.username} />
+                  <AvatarImage
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${comment?.commentedBy?.avatar}`}
+                    alt={comment.commentedBy.username}
+                  />
                   <AvatarFallback>
                     {comment.commentedBy.username[0]}
                   </AvatarFallback>

@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 
 
 import { useSelector } from "react-redux";
-import PostFeed from "./post-feed";
+import PostFeed from "@/components/post-feed";
+
 
 
 
@@ -41,7 +42,7 @@ export default function HomePage() {
       </div>
 
       {/* Posts Feed */}
-      <PostFeed userDetails={userDetails} />
+      <PostFeed />
     </div>
   );
 }
