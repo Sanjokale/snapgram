@@ -5,28 +5,18 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { setUserDetails } from "@/redux/slices/userSlice";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Details from "../user-details";
 import { Card, CardTitle } from "@/components/ui/card";
 import PostFeed from "@/components/post-feed";
 const Profile = () => {
   // This would come from your auth/database in a real app
-  const user = {
-    username: "jane_smith",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    bio: "Traveler, photographer, and nature lover.",
-    address: "456 Oak Ave, Anytown",
-    website: "https://www.janesmith.photography",
-    imageUrl: "/placeholder.svg?height=300&width=300",
-    followers: [],
-    following: [],
-    saved_posts: [],
-  };
+
   const { userDetails } = useSelector((state) => state.user);
 
   const [isUploading, setIsUploading] = useState(false);
+  const [currentProfileDetails, setCurrentProfileDetails] = useState(null);
   const params = useParams();
   const dispatch = useDispatch();
 
@@ -38,7 +28,7 @@ const Profile = () => {
     try {
       setIsUploading(true);
       const { data } = await axios.post(
-        `http://localhost:8080/upload-avatar/${params.id}`,
+        `http://localhost:8080/upload-avatar/${userDetails.user._id}`,
         formData
       );
 
@@ -59,21 +49,38 @@ const Profile = () => {
     }
   };
 
+  const getCurrentProfileDetails = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8080/user/" + params.id
+      );
+      setCurrentProfileDetails(data);
+    } catch {}
+  };
+
+  useEffect(() => {
+    getCurrentProfileDetails();
+  }, []);
+
   return (
     <>
       <div className="rounded-md shadow-md ">
         <Header
           handleImageUpload={handleImageUpload}
           isUploading={isUploading}
+          currentProfileDetails={currentProfileDetails}
           userDetails={userDetails}
+          params={params}
         />
-        <Details user={user} />
+        <Details
+          currentProfileDetails={currentProfileDetails}
+          setCurrentProfileDetails={setCurrentProfileDetails}
+        />
       </div>
       {/* User Posts */}
       <div className=" max-w-[70%] mt-4">
         <CardTitle>My Posts</CardTitle>
-        <PostFeed userId={params?.id}/>
-       
+        <PostFeed userId={params?.id} />
       </div>
     </>
   );

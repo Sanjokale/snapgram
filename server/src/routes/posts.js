@@ -16,3 +16,4 @@ postRoute.put("/post/like", postLikeToggled)
 postRoute.get("/post/:postId/likes/:userId", PostLikesCount)
 
 module.exports = postRoute;
+    

@@ -1,9 +1,17 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Loader2, User } from "lucide-react";
+import axios from "axios";
+import { Camera, Loader2 } from "lucide-react";
 
-const Header = ({handleImageUpload, isUploading, userDetails}) => {
-
+const Header = ({
+  handleImageUpload,
+  isUploading,
+  currentProfileDetails,
+  userDetails,
+  params,
+}) => {
+  const isCurrentUser = params.id == userDetails?.user?._id;
+  //console.log('iscrrentUSER', isCurrentUser);
   
   return (
     <div className="relative h-48 bg-blue-200 rounded-t-md">
@@ -14,7 +22,10 @@ const Header = ({handleImageUpload, isUploading, userDetails}) => {
             className="relative cursor-pointer group"
           >
             <Avatar className="w-32 h-32 transition-all duration-200 group-hover:ring-4 group-hover:ring-offset-2 group-hover:ring-primary/20">
-              <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`} alt="Profile picture" />
+              <AvatarImage
+                src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${currentProfileDetails?.avatar}`}
+                alt="Profile picture"
+              />
               <AvatarFallback className="bg-muted">
                 {isUploading ? (
                   <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
@@ -27,18 +38,24 @@ const Header = ({handleImageUpload, isUploading, userDetails}) => {
               <Camera className="w-8 h-8 text-white" />
             </div>
           </label>
-          <input
-            id="profile-upload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageUpload}
-            disabled={isUploading}
-          />
+          {isCurrentUser && (
+            <input
+              id="profile-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageUpload}
+              disabled={isUploading}
+            />
+          )}
         </div>
         <div className="mb-4">
-          <h2 className="text-2xl font-bold">{userDetails?.user?.username}</h2>
-          <p className="text-muted-foreground">@{userDetails?.user?.username}</p>
+          <h2 className="text-2xl font-bold">
+            {currentProfileDetails?.username}
+          </h2>
+          <p className="text-muted-foreground">
+            @{currentProfileDetails?.username}
+          </p>
         </div>
       </div>
     </div>

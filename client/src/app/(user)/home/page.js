@@ -4,16 +4,13 @@ import Link from "next/link";
 import { PenSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
-
-import { useSelector } from "react-redux";
 import PostFeed from "@/components/post-feed";
-
-
-
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 
 export default function HomePage() {
+  const router = useRouter()
   const { userDetails } = useSelector((state) => state.user);
 
   return (
@@ -21,7 +18,7 @@ export default function HomePage() {
       {/* What's on your mind section */}
       <div className="rounded-lg border bg-card p-4">
         <div className="flex items-center gap-4">
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-10 w-10"  onClick={ () => router.push('/profile/' + userDetails?.user._id)}>
             <AvatarImage
               src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${userDetails?.user?.avatar}`}
               alt={userDetails?.user?.username}

@@ -15,27 +15,24 @@ import { Input } from "./ui/input";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export function Post({ post }) {
+  const router = useRouter();
   const { toast } = useToast();
   const [postId, setPostId] = useState("");
   const inputRef = useRef(null);
   const [postComments, setPostComments] = useState([]);
   const [updatedPost, setUpdatedPost] = useState({});
   const { userDetails } = useSelector((state) => state.user);
-  const [isLiked, setIsLiked] = useState(null)
-  const [likesCount, setLikesCount] = useState(0)
-
-  console.log(userDetails);
-  
-
-  // include is the string method that sees the string is included or not. it returnd the boolean value base upon the included or not.
+  const [isLiked, setIsLiked] = useState(null);
+  const [likesCount, setLikesCount] = useState(0);
 
   const handleSubmitComment = async (commentedPost, e) => {
     e.preventDefault();
 
     try {
-      console.log("Comment value:", inputRef.current.value);
+      //console.log("Comment value:", inputRef.current.value);
 
       const content = inputRef.current.value;
       if (content) {
@@ -66,38 +63,36 @@ export function Post({ post }) {
     inputRef.current.value = ""; // Clear input after submission
   };
 
-
-
   const fetchComments = async () => {
     try {
       const { data } = await axios.get(
         `http://localhost:8080/post/${postId}/comments`
       );
       setPostComments(data);
-      console.log(postComments);
+      //console.log(postComments);
     } catch (error) {
       console.log("Error fetching comments:", error);
     }
   };
 
   const onLike = async () => {
-    const{data} = await axios.put("http://localhost:8080/post/like", {
+    const { data } = await axios.put("http://localhost:8080/post/like", {
       postId: post._id,
       userId: userDetails.user._id,
     });
 
     if (data) {
-      setIsLiked(!isLiked)
-      
-
-  }
-}
+      setIsLiked(!isLiked);
+    }
+  };
 
   const fetchLikesData = async () => {
     try {
-      const {data} = await axios.get(`http://localhost:8080/post/${post._id}/likes/${userDetails.user._id}`);
-      console.log(data);
-      
+      const { data } = await axios.get(
+        `http://localhost:8080/post/${post._id}/likes/${userDetails.user._id}`
+      );
+      // console.log(data);
+
       setLikesCount(data.likesCount); // Assuming your API returns likesCount
       setIsLiked(data.isLiked); // Assuming your API returns isLiked
     } catch (error) {
@@ -106,22 +101,12 @@ export function Post({ post }) {
   };
 
   useEffect(() => {
-    fetchLikesData()
-  
-  }, [ likesCount, isLiked,])
-
-
-  
-  
-
-  
-
-  
+    fetchLikesData();
+  }, [likesCount, isLiked]);
 
   useEffect(() => {
     if (postId) {
       fetchComments();
-     
     }
   }, [postId, postComments]);
 
@@ -129,7 +114,7 @@ export function Post({ post }) {
     <>
       <Card className=" border-none shadow-lg">
         <CardHeader className="flex flex-row items-center gap-2">
-          <Avatar>
+          <Avatar onClick={() => router.push("/profile/" + post?.user._id)}>
             <AvatarImage
               src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${post?.user?.avatar}`}
               alt={post?.user?.username}

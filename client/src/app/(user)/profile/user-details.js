@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Link2Icon, LinkIcon, Mail, MapPin } from 'lucide-react'
 import React, { useState } from 'react'
 
-const Details = ({user}) => {
+const Details = ({user, currentProfileDetails, setCurrentProfileDetails}) => {
     const [isEditing, setIsEditing] = useState(false)
   return (
     
@@ -47,37 +47,40 @@ const Details = ({user}) => {
             </div>
           ) : (
             <div className="space-y-4">
-              <p className="text-sm">{user.bio}</p>
+              <p className="text-sm">{currentProfileDetails?.bio}</p>
               <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  {user.email}
+                  {currentProfileDetails?.email}
                 </div>
-                {user.website && (
+                {currentProfileDetails?.website && (
                   <div className="flex items-center gap-2">
                     <Link2Icon className="h-4 w-4" />
-                    <a href={user.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                      {user.website}
+                    <a href={currentProfileDetails?.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                      {currentProfileDetails?.website}
                     </a>
                   </div>
                 )}
-                {user.address && (
+                {currentProfileDetails?.address && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    {user.address}
+                    {currentProfileDetails?.address}
                   </div>
                 )}
               </div>
               <div className="flex gap-4 text-sm">
                 <div>
-                  <span className="font-semibold">{user.followers.length}</span> followers
+                  <span className="font-semibold">{currentProfileDetails?.followers?.length}</span> followers
                 </div>
                 <div>
-                  <span className="font-semibold">{user.following.length}</span> following
+                  <span className="font-semibold">{currentProfileDetails?.following?.length}</span> following
                 </div>
               </div>
               <Button variant="outline" onClick={() => setIsEditing(true)}>
                 Edit Profile
+              </Button>
+              <Button variant="outline" className=" m-2 bg-blue-100  hover:bg-blue-300"  onClick={() => setIsEditing(true)}>
+                Follow
               </Button>
             </div>
           )}

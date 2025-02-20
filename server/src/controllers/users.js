@@ -34,4 +34,9 @@ const uploadAvatar = async (req, res) => {
   })
 }
 
-module.exports = { register, login, uploadAvatar };
+const findUserById = async (req, res) => {
+  const user = await User.findById(req.params.id)
+  res.send(user)
+}
+
+module.exports = { register, login, uploadAvatar, findUserById };
