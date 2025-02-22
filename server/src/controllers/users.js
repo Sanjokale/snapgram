@@ -8,7 +8,7 @@ const register = async (req, res) => {
   const emailExist = await User.exists({ email: req.body.email });
   if (emailExist) return res.status(409).send({ msg: "Email already exist!" });
   req.body.password = await bcrypt.hash(req.body.password, saltRounds);
-  await User.create(req.body)
+  await User.create(req.body);
   res.status(200).send({ msg: "Account created successfully" });
 };
 
@@ -24,19 +24,61 @@ const login = async (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-  const user = await User.findById(req.params.id)
-  if(!user) return res.status(404).send("User Id is invalid")
-    user.avatar = req.file.filename
-  user.save()
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).send("User Id is invalid");
+  user.avatar = req.file.filename;
+  user.save();
   res.send({
     msg: "Avatar uploaded successfully",
-    user
-  })
-}
+    user,
+  });
+};
 
 const findUserById = async (req, res) => {
-  const user = await User.findById(req.params.id)
-  res.send(user)
-}
+  const user = await User.findById(req.params.id);
+  res.send(user);
+};
 
-module.exports = { register, login, uploadAvatar, findUserById };
+const followUser = async (req, res) => {
+  const { requestedBy, requestedTo } = req.params;
+  const requestedUser = await User.findById(requestedBy);
+
+  if (requestedUser?.following?.includes(requestedTo)) {
+    return res.send({ msg: `You are already following` });
+  }
+
+  requestedUser.following.push(requestedTo);
+  requestedUser.save();
+
+  const requestedToUser = await User.findById(requestedTo);
+  console.log(requestedToUser);
+
+  requestedToUser.followers.push(requestedBy);
+  requestedToUser.save();
+
+  res.send({ msg: `you have followed ${requestedToUser.username}` });
+};
+
+const getFollowersList = async (req, res) => {
+  const user = await User.findById(req.params.userId)
+    .populate("followers")
+    .select("followers");
+  return res.json(user);
+};
+
+const getFollowingList = async (req, res) => {
+  const user = await User.findById(req.params.userId)
+    .populate("following")
+    .select("following");
+  return res.json(user);
+};
+
+module.exports = {
+  register,
+  login,
+  uploadAvatar,
+  findUserById,
+  followUser,
+  getFollowersList,
+  getFollowingList,
+};

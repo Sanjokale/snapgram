@@ -75,6 +75,7 @@ const Profile = () => {
         <Details
           currentProfileDetails={currentProfileDetails}
           setCurrentProfileDetails={setCurrentProfileDetails}
+          userDetails = {userDetails}
         />
       </div>
       {/* User Posts */}
