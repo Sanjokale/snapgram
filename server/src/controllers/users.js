@@ -39,24 +39,36 @@ const findUserById = async (req, res) => {
   res.send(user);
 };
 
+
 const followUser = async (req, res) => {
   const { requestedBy, requestedTo } = req.params;
   const requestedUser = await User.findById(requestedBy);
+  const requestedToUser = await User.findById(requestedTo);
 
-  if (requestedUser?.following?.includes(requestedTo)) {
-    return res.send({ msg: `You are already following` });
+  if (!requestedUser || !requestedToUser) {
+    return res.status(404).send({ msg: "User not found" });
   }
 
-  requestedUser.following.push(requestedTo);
-  requestedUser.save();
+  // Check if the user is already following the requested user
+  if (requestedUser.following.includes(requestedTo)) {
+    // If already following, unfollow the user
+    requestedUser.following.pull(requestedTo); // Remove from following
+    requestedToUser.followers.pull(requestedBy); // Remove from followers
 
-  const requestedToUser = await User.findById(requestedTo);
-  console.log(requestedToUser);
+    await requestedUser.save(); // Save changes to the requesting user
+    await requestedToUser.save(); // Save changes to the requested user
 
-  requestedToUser.followers.push(requestedBy);
-  requestedToUser.save();
+    return res.send({ msg: `You have unfollowed ${requestedToUser.username}` });
+  } else {
+    // If not following, follow the user
+    requestedUser.following.push(requestedTo); // Add to following
+    requestedToUser.followers.push(requestedBy); // Add to followers
 
-  res.send({ msg: `you have followed ${requestedToUser.username}` });
+    await requestedUser.save(); // Save changes to the requesting user
+    await requestedToUser.save(); // Save changes to the requested user
+
+    return res.send({ msg: `You are now following ${requestedToUser.username}` });
+  }
 };
 
 const getFollowersList = async (req, res) => {
