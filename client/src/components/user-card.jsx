@@ -1,21 +1,19 @@
 'use client'
-import { Button } from "@/components/ui/button";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "lucide-react";
 
-import { useToast } from "@/hooks/use-toast";
-
-export function UserCard({user, userDetails}) {
+export function UserCard({user}) {
  
-const isFollowing = user.following.includes(userDetails.user._id)
+
 
   return (
-    <Card>
+    <Card className=" border-none shadow-md bg-blue-100">
     <CardContent className="flex items-center justify-between p-4">
       <div className="flex items-center gap-4">
         <Avatar>
-          <AvatarImage src={user?.avatar || null} alt={user?.username} />
+          <AvatarImage src={`${process.env.NEXT_PUBLIC_API_URL}/static/avatars/${user?.avatar}` || null} alt={user?.username} />
           <AvatarFallback>
             <User className="h-4 w-4" />
           </AvatarFallback>
@@ -25,9 +23,7 @@ const isFollowing = user.following.includes(userDetails.user._id)
           <p className="text-sm text-muted-foreground">@{user?.username}</p>
         </div>
       </div>
-      <Button > {/* Pass user._id directly */}
-        {isFollowing ? "Following" : "Follow"}
-      </Button>
+    
     </CardContent>
   </Card>
   );

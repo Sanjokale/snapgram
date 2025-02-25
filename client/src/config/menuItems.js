@@ -19,7 +19,7 @@ const menuItems = [
     },
     {
       icon: Users,
-      label: "Followers",
+      label: "Connections",
       href: "/followers",
     },
     {

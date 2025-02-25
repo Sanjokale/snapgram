@@ -86,7 +86,7 @@ const getFollowingList = async (req, res) => {
 };
     
 module.exports = {
-  register,
+  register,  
   login,
   uploadAvatar,  
   findUserById,
