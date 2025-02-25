@@ -84,11 +84,11 @@ const getFollowingList = async (req, res) => {
     .select("following");
   return res.json(user);
 };
-
+    
 module.exports = {
   register,
   login,
-  uploadAvatar,
+  uploadAvatar,  
   findUserById,
   followUser,
   getFollowersList,
