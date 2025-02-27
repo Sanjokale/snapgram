@@ -5,8 +5,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Post } from "@/components/post";
 
+
 const PostFeed = ({ userId }) => {
   const [posts, setPosts] = useState([]);
+  //const [isSaved, setIsSaved] = useState(false);
+ 
+
+ 
+
+
+
+
+
+
 
   const fetchPosts = async () => {
     try {
@@ -20,6 +31,8 @@ const PostFeed = ({ userId }) => {
     }
   };
 
+  
+  
   useEffect(() => {
     fetchPosts();
   }, []);

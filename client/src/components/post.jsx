@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, MessageCircle, Send, Share } from "lucide-react";
+import { Bookmark, Heart, MessageCircle, Send, Share } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +14,9 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { addToSavePost } from "@/redux/slices/postSlice";
 
 export function Post({ post }) {
   const router = useRouter();
@@ -23,10 +24,13 @@ export function Post({ post }) {
   const [postId, setPostId] = useState("");
   const inputRef = useRef(null);
   const [postComments, setPostComments] = useState([]);
-  const [updatedPost, setUpdatedPost] = useState({});
+
   const { userDetails } = useSelector((state) => state.user);
   const [isLiked, setIsLiked] = useState(null);
   const [likesCount, setLikesCount] = useState(0);
+  const { savePost } = useSelector((state) => state.post);
+  const isSaved = savePost.some((item) => item?._id === post?._id);
+  const dispatch = useDispatch()
 
   const handleSubmitComment = async (commentedPost, e) => {
     e.preventDefault();
@@ -62,6 +66,16 @@ export function Post({ post }) {
     // Do something with the comment value
     inputRef.current.value = ""; // Clear input after submission
   };
+
+  const handleSave = (post) => {
+    dispatch(addToSavePost({ ...post, isSaved: true }));
+    // Check if the post is already saved
+    // const isPostSaved = savePost?.some((item) => item?._id === post?._id);
+
+    // // Update the isSaved state based on whether the post is saved
+    // setIsSaved(!isPostSaved);
+  };
+
 
   const fetchComments = async () => {
     try {
@@ -153,6 +167,14 @@ export function Post({ post }) {
               {post?.comments?.length}
             </Button>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={isSaved ? "text-primary" : ""}
+            onClick={() => handleSave(post)}
+          >
+            <Bookmark className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} />
+          </Button>
         </CardFooter>
         {/* {comment section} */}
 
