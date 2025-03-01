@@ -13,7 +13,7 @@ export default function SavedPostsPage() {
 
   return (
     <div className="container max-w-3xl py-8">
-      <Card className="mb-6">
+      <Card className="mb-6 border-none bg-blue-100">
         <CardHeader className="flex flex-row items-center gap-2">
           <Bookmark className="h-5 w-5" />
           <CardTitle>Saved Posts</CardTitle>

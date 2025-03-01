@@ -1,6 +1,6 @@
 // Menu items with icons and labels
 
-import { Home, PenSquare, Bookmark, Users, User } from "lucide-react"
+import { Home, PenSquare, Bookmark, Users, User, MessageSquare } from "lucide-react"
 const menuItems = [
     {
       icon: Home,
@@ -26,6 +26,11 @@ const menuItems = [
       icon: User,
       label: "Profile",
       href: "/profile",
+    },
+    {
+      icon: MessageSquare,
+      label: "Messages",
+      href: "/messages",
     },
   ]
   
