@@ -9,6 +9,7 @@ import { Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
+import { date } from "yup";
 
 const socket = io("http://localhost:8080");
 
@@ -39,12 +40,15 @@ const MessagePage = () => {
 
   useEffect(() => {
     socket.on("connection");
+   
+  }, []);
+
+  useEffect (()=> {
     socket.on("recieveMsg", (msg) => {
       setMessages((prev) => [...prev, msg]);
       //console.log(messages);
-      
     });
-  }, []);
+  }, [messages])
 
   return (
     <div className="container max-w-6xl py-6">
@@ -111,47 +115,10 @@ const MessagePage = () => {
               </div>
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
-                  {messages?.length > 10 ? (
+                  {messages?.length > 0 ? (
                     messages?.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex gap-2 items-start ${
-                          message.senderId === currentUser.id
-                            ? "flex-row-reverse"
-                            : ""
-                        }`}
-                      >
-                        <Avatar className="mt-0.5">
-                          <AvatarImage
-                            src={
-                              message.senderId === currentUser.id
-                                ? currentUser.imageUrl
-                                : selectedChat.imageUrl
-                            }
-                            alt={
-                              message.senderId === currentUser.id
-                                ? currentUser.name
-                                : selectedChat.name
-                            }
-                          />
-                          <AvatarFallback>
-                            {message.senderId === currentUser.id
-                              ? currentUser.name[0]
-                              : selectedChat.name[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div
-                          className={`rounded-lg p-3 ${
-                            message.senderId === currentUser.id
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted"
-                          }`}
-                        >
-                          <p>{message.content}</p>
-                          <span className="text-xs opacity-70 mt-1 block">
-                            {new Date(message.timestamp).toLocaleTimeString()}
-                          </span>
-                        </div>
+                      <div>
+                        <p>{message}</p>
                       </div>
                     ))
                   ) : (
@@ -192,3 +159,5 @@ const MessagePage = () => {
 };
 
 export default MessagePage;
+
+//add tiptap editor
